@@ -1,0 +1,266 @@
+{
+    "metadata": {
+        "transaction_key": "deprecated",
+        "request_id": "df1cbcca-92a0-4875-9985-b47ac1ce8cfe",
+        "sha256": "4aa818f091d4c8231b63883fb64f23562188d84ae08e431a9d5f1b168d340c12",
+        "created": "2026-03-10 10:05:02.729000+00:00",
+        "duration": 502.09955,
+        "channels": 1.0,
+        "models": [
+            "91d566f5-ff0d-4584-9b9b-2414a929e62e"
+        ],
+        "model_info": {
+            "91d566f5-ff0d-4584-9b9b-2414a929e62e": {
+                "name": "medical-nova-3",
+                "version": "2025-02-25.26775",
+                "arch": "nova-3"
+            }
+        }
+    },
+    "results": {
+        "audio_segments": [
+            {
+                "id": 0,
+                "transcript": "Let's practice the phrases you need to know at the hospital.",
+                "start_time": 8.96,
+                "end_time": 12.32,
+                "confidence": 0.9849361,
+                "speaker_label": "spk_0",
+                "channel": null,
+                "language_code": "en-US"
+            },
+            {
+                "id": 1,
+                "transcript": "If you are staying in Korea, remember 01/2019 in case of emergency.",
+                "start_time": 13.955001,
+                "end_time": 19.395,
+                "confidence": 0.9849361,
+                "speaker_label": "spk_0",
+                "channel": null,
+                "language_code": "en-US"
+            },
+            {
+                "id": 2,
+                "transcript": "What brings you here today?",
+                "start_time": 20.035,
+                "end_time": 24.275002,
+                "confidence": 0.9849361,
+                "speaker_label": "spk_0",
+                "channel": null,
+                "language_code": "en-US"
+            },
+            {
+                "id": 3,
+                "transcript": "I need to see a doctor.",
+                "start_time": 42.425,
+                "end_time": 43.945,
+                "confidence": 0.9849361,
+                "speaker_label": "spk_0",
+                "channel": null,
+                "language_code": "en-US"
+            },
+            {
+                "id": 4,
+                "transcript": "Is there an English speaking doctor here?",
+                "start_time": 62.879997,
+                "end_time": 65.36,
+                "confidence": 0.9849361,
+                "speaker_label": "spk_0",
+                "channel": null,
+                "language_code": "en-US"
+            },
+            {
+                "id": 5,
+                "transcript": "I have a headache.",
+                "start_time": 82.29,
+                "end_time": 83.89,
+                "confidence": 0.9849361,
+                "speaker_label": "spk_0",
+                "channel": null,
+                "language_code": "en-US"
+            },
+            {
+                "id": 6,
+                "transcript": "I have a sore throat.",
+                "start_time": 84.61,
+                "end_time": 92.21,
+                "confidence": 0.9849361,
+                "speaker_label": "spk_0",
+                "channel": null,
+                "language_code": "en-US"
+            },
+            {
+                "id": 7,
+                "transcript": "I have a stomach ache.",
+                "start_time": 95.975,
+                "end_time": 104.055,
+                "confidence": 0.9849361,
+                "speaker_label": "spk_0",
+                "channel": null,
+                "language_code": "en-US"
+            },
+            {
+                "id": 8,
+                "transcript": "I have pain here.",
+                "start_time": 112.93,
+                "end_time": 114.450005,
+                "confidence": 0.9849361,
+                "speaker_label": "spk_0",
+                "channel": null,
+                "language_code": "en-US"
+            },
+            {
+                "id": 9,
+                "transcript": "I have indigestion I have a fever I have a cold.",
+                "start_time": 121.915,
+                "end_time": 140.40001,
+                "confidence": 0.9849361,
+                "speaker_label": "spk_0",
+                "channel": null,
+                "language_code": "en-US"
+            },
+            {
+                "id": 10,
+                "transcript": "I sprained my ankle. I got burned. I have diarrhea.",
+                "start_time": 146.0,
+                "end_time": 164.055,
+                "confidence": 0.9849361,
+                "speaker_label": "spk_0",
+                "channel": null,
+                "language_code": "en-US"
+            },
+            {
+                "id": 13,
+                "transcript": "When did the pain start?",
+                "start_time": 170.51001,
+                "end_time": 172.03,
+                "confidence": 0.9849361,
+                "speaker_label": "spk_0",
+                "channel": null,
+                "language_code": "en-US"
+            },
+            {
+                "id": 14,
+                "transcript": "Please lie down here.",
+                "start_time": 209.485,
+                "end_time": 211.08499,
+                "confidence": 0.9849361,
+                "speaker_label": "spk_0",
+                "channel": null,
+                "language_code": "en-US"
+            },
+            {
+                "id": 15,
+                "transcript": "Are you taking any medication now?",
+                "start_time": 248.755,
+                "end_time": 250.995,
+                "confidence": 0.9849361,
+                "speaker_label": "spk_0",
+                "channel": null,
+                "language_code": "en-US"
+            },
+            {
+                "id": 16,
+                "transcript": "I take a painkiller.",
+                "start_time": 269.165,
+                "end_time": 271.005,
+                "confidence": 0.9849361,
+                "speaker_label": "spk_0",
+                "channel": null,
+                "language_code": "en-US"
+            },
+            {
+                "id": 17,
+                "transcript": "I will give you a short.",
+                "start_time": 288.94,
+                "end_time": 290.46,
+                "confidence": 0.9849361,
+                "speaker_label": "spk_0",
+                "channel": null,
+                "language_code": "en-US"
+            },
+            {
+                "id": 18,
+                "transcript": "You need to take a rest.",
+                "start_time": 309.13,
+                "end_time": 310.73,
+                "confidence": 0.9849361,
+                "speaker_label": "spk_0",
+                "channel": null,
+                "language_code": "en-US"
+            },
+            {
+                "id": 19,
+                "transcript": "You need an operation immediately.",
+                "start_time": 328.565,
+                "end_time": 330.725,
+                "confidence": 0.9849361,
+                "speaker_label": "spk_0",
+                "channel": null,
+                "language_code": "en-US"
+            },
+            {
+                "id": 20,
+                "transcript": "You need to be hospitalized.",
+                "start_time": 348.975,
+                "end_time": 350.895,
+                "confidence": 0.9849361,
+                "speaker_label": "spk_0",
+                "channel": null,
+                "language_code": "en-US"
+            },
+            {
+                "id": 21,
+                "transcript": "How long will it take until I recover?",
+                "start_time": 369.63,
+                "end_time": 372.35,
+                "confidence": 0.9849361,
+                "speaker_label": "spk_0",
+                "channel": null,
+                "language_code": "en-US"
+            },
+            {
+                "id": 22,
+                "transcript": "Take this prescription to the pharmacy.",
+                "start_time": 388.71,
+                "end_time": 391.50998,
+                "confidence": 0.9849361,
+                "speaker_label": "spk_0",
+                "channel": null,
+                "language_code": "en-US"
+            },
+            {
+                "id": 23,
+                "transcript": "How do I take this medicine?",
+                "start_time": 408.88498,
+                "end_time": 410.805,
+                "confidence": 0.9849361,
+                "speaker_label": "spk_0",
+                "channel": null,
+                "language_code": "en-US"
+            },
+            {
+                "id": 24,
+                "transcript": "Take it after the meal 3 times a day.",
+                "start_time": 428.855,
+                "end_time": 431.975,
+                "confidence": 0.9849361,
+                "speaker_label": "spk_0",
+                "channel": null,
+                "language_code": "en-US"
+            },
+            {
+                "id": 25,
+                "transcript": "Can you give me a diagnosis report?",
+                "start_time": 469.16,
+                "end_time": 471.63998,
+                "confidence": 0.9849361,
+                "speaker_label": "spk_0",
+                "channel": null,
+                "language_code": "en-US"
+            }
+        ]
+    },
+    "text": "Let's practice the phrases you need to know at the hospital. If you are staying in Korea, remember 01/2019 in case of emergency. What brings you here today? I need to see a doctor. Is there an English speaking doctor here? I have a headache. I have a sore throat. I have a stomach ache. I have pain here. I have indigestion I have a fever I have a cold. I sprained my ankle. I got burned. I have diarrhea. When did the pain start? Please lie down here. Are you taking any medication now? I take a painkiller. I will give you a short. You need to take a rest. You need an operation immediately. You need to be hospitalized. How long will it take until I recover? Take this prescription to the pharmacy. How do I take this medicine? Take it after the meal 3 times a day. Can you give me a diagnosis report?",
+    "jobName": "2026-03-10-10-04-25-32b885de-7f24-4687-b74d-a27dac3fc796-8c0358d9-425e-45fe-b5fb-c445bfb7bb72-chart-vt1_s60DB-raw-mp3-uat01-deepgram-multi-lang-transcript"
+}

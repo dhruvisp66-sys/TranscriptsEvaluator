@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EvalAI - Dual Meta-Judge ASR Evaluator</title>
+    <meta name="description" content="AI-powered dual ASR evaluation using Gemini Pro & OpenAI GPT-4o with consensus reporting." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div id="app-background">
+      <div class="glow glow-1"></div>
+      <div class="glow glow-2"></div>
+    </div>
+
+    <header id="main-header">
+      <div class="container">
+        <h1 id="app-title">Eval<span>AI</span> 2.0</h1>
+        <p id="app-subtitle">Dual-Judge ASR Accuracy Synthesizer</p>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- Input section -->
+      <section id="input-section" class="glass-card active">
+        <h2 id="input-heading">Run Dual Evaluation</h2>
+        <p style="color: var(--text-secondary); margin-bottom: 2rem;">
+          This will trigger simultaneous evaluations via Gemini and OpenAI. A final synthesis report will be generated.
+        </p>
+        <form id="evaluation-form">
+          <div class="grid-2col">
+            <div class="file-drop-container">
+              <div id="drop-zone-audio" class="drop-zone">
+                <div class="drop-icon">🎧</div>
+                <p class="drop-text">Drag & drop your <strong>Audio File</strong> here<br /><span>(MP3, WAV, M4A, etc.)</span></p>
+                <input type="file" id="audio-input" name="audioFile" accept="audio/*" required />
+                <div id="audio-filename" class="file-name-display"></div>
+              </div>
+            </div>
+            <div class="file-drop-container">
+              <div id="drop-zone-transcript" class="drop-zone">
+                <div class="drop-icon">📄</div>
+                <p class="drop-text">Drag & drop your <strong>Transcript File</strong> here<br /><span>(.txt or deepgram generated json)</span></p>
+                <input type="file" id="transcript-input" name="transcriptFile" accept=".txt,.json,application/json,text/plain" required />
+                <div id="transcript-filename" class="file-name-display"></div>
+              </div>
+            </div>
+          </div>
+          <div class="action-bar">
+            <button type="submit" id="submit-btn" class="btn-primary">
+              <span class="btn-text">Generate Synthesized Report</span>
+              <div class="btn-glow"></div>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Loading section -->
+      <section id="loading-section" class="glass-card hidden">
+        <div class="loader-container">
+          <div class="circular-loader">
+            <div class="loader-ring"></div>
+            <div class="loader-ring"></div>
+            <div class="loader-core">AI++</div>
+          </div>
+          <h3 id="loading-title">Analyzing via Dual Engines...</h3>
+          <p id="loading-subtitle">Both Gemini and OpenAI are independently judging the context and accuracy. Synthesizing consensus...</p>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Results section -->
+      <section id="results-section" class="hidden">
+        <div class="results-header">
+          <h2>Evaluation Results synthesis</h2>
+          <button id="reset-btn" class="btn-secondary">New Evaluation</button>
+        </div>
+
+        <div class="results-grid">
+          <!-- Consensus Card (Spans full width top) -->
+          <div id="consensus-card" class="glass-card result-item consensus-item col-span-12">
+            <div class="consensus-layout">
+              <div class="score-container">
+                <h3>Consensus Score</h3>
+                <div class="score-circle">
+                  <svg viewBox="0 0 36 36" class="circular-chart" id="score-chart">
+                    <path class="circle-bg" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                    <path class="circle-stroke" id="score-stroke" stroke-dasharray="0, 100" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+                  </svg>
+                  <div class="score-value" id="consensus-score">0</div>
+                </div>
+              </div>
+              <div class="verdict-container">
+                <h3>Final Meta Verdict</h3>
+                <p id="meta-verdict-text">Loading...</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Agreements & Discrepancies -->
+          <div class="glass-card result-item list-item col-span-6">
+            <h3>Key Agreements</h3>
+            <ul id="agreements-list" class="styled-list success-list"></ul>
+          </div>
+          <div class="glass-card result-item list-item col-span-6">
+            <h3>Judge Discrepancies</h3>
+            <ul id="discrepancies-list" class="styled-list warning-list"></ul>
+          </div>
+
+          <!-- Divider -->
+          <div class="col-span-12" style="margin-top:2rem; margin-bottom:1rem;">
+            <h2 style="text-align:center; font-size:1.4rem;">Individual Judge Reports</h2>
+          </div>
+
+          <!-- Gemini vs OpenAI Tables -->
+          <div class="judge-column col-span-6 gemini-column glass-card result-item">
+            <h3><span class="judge-icon">🔵</span> Gemini Pro</h3>
+            <div class="judge-score">Score: <span id="gemini-score">--</span> | Risk: <span id="gemini-risk" class="inline-risk">--</span></div>
+            <p class="judge-analysis" id="gemini-analysis">...</p>
+            
+            <h4>Missed Information</h4>
+            <ul id="gemini-missed" class="styled-list compact-list"></ul>
+            
+            <h4>Incorrect Information</h4>
+            <ul id="gemini-incorrect" class="styled-list compact-list"></ul>
+          </div>
+
+          <div class="judge-column col-span-6 openai-column glass-card result-item">
+            <h3><span class="judge-icon">🟢</span> OpenAI (GPT-4o)</h3>
+            <div class="judge-score">Score: <span id="openai-score">--</span> | Risk: <span id="openai-risk" class="inline-risk">--</span></div>
+            <p class="judge-analysis" id="openai-analysis">...</p>
+            
+            <h4>Missed Information</h4>
+            <ul id="openai-missed" class="styled-list compact-list"></ul>
+            
+            <h4>Incorrect Information</h4>
+            <ul id="openai-incorrect" class="styled-list compact-list"></ul>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- Error section -->
+      <section id="error-section" class="glass-card hidden error-card">
+        <h3>An error occurred</h3>
+        <p id="error-message"></p>
+        <button id="error-reset-btn" class="btn-secondary">Try Again</button>
+      </section>
+    </main>
+    <script src="/static/script.js"></script>
+  </body>
+</html>

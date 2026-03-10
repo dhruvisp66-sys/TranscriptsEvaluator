@@ -1,0 +1,16 @@
+# In c:\Users\dhruvi.sp\Desktop\EvaluatingTranscripts\.gitignore
+
+# Ignore ALL env files even if they have suffixes (e.g., .env.local)
+.env*
+
+# Ignore any sub-folder .env files explicitly just to be safe
+**/ .env
+
+# Python specific
+venv/
+__pycache__/
+*.py[cod]
+
+# Audio/Output files (you probably don't want to push raw audio to GitHub)
+*.wav
+extracted_audio_chinese/

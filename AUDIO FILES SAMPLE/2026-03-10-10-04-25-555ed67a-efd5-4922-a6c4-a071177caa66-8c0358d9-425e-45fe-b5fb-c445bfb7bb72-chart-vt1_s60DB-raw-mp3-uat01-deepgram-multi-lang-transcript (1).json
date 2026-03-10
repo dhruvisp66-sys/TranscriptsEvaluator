@@ -1,0 +1,25 @@
+{
+    "metadata": {
+        "transaction_key": "deprecated",
+        "request_id": "cc977379-4910-4e28-97e8-fa6489673be4",
+        "sha256": "aa52e8f3e4b9a7e91a1d92f64a7cecad389e9b652dd89f7e43e7ea66ee8dc726",
+        "created": "2026-03-10 10:05:27.128000+00:00",
+        "duration": 1750.1519,
+        "channels": 1.0,
+        "models": [
+            "91d566f5-ff0d-4584-9b9b-2414a929e62e"
+        ],
+        "model_info": {
+            "91d566f5-ff0d-4584-9b9b-2414a929e62e": {
+                "name": "medical-nova-3",
+                "version": "2025-02-25.26775",
+                "arch": "nova-3"
+            }
+        }
+    },
+    "results": {
+        "audio_segments": []
+    },
+    "text": "",
+    "jobName": "2026-03-10-10-04-25-555ed67a-efd5-4922-a6c4-a071177caa66-8c0358d9-425e-45fe-b5fb-c445bfb7bb72-chart-vt1_s60DB-raw-mp3-uat01-deepgram-multi-lang-transcript"
+}

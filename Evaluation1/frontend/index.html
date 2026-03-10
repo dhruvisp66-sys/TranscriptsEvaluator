@@ -1,0 +1,202 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>EvalAI - ASR Assessment Engine</title>
+    <meta
+      name="description"
+      content="AI-powered ASR evaluation judging accuracy, completeness, and context of transcripts across languages."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/style.css" />
+  </head>
+  <body>
+    <div id="app-background">
+      <div class="glow glow-1"></div>
+      <div class="glow glow-2"></div>
+    </div>
+
+    <header id="main-header">
+      <div class="container">
+        <h1 id="app-title">Eval<span>AI</span></h1>
+        <p id="app-subtitle">Intelligent ASR Accuracy Evaluator</p>
+      </div>
+    </header>
+
+    <main class="container">
+      <!-- Input section -->
+      <section id="input-section" class="glass-card active">
+        <h2 id="input-heading">Run Evaluation</h2>
+
+        <form id="evaluation-form">
+          <div class="form-group">
+            <label for="model-provider">Select Evaluator Backend</label>
+            <select
+              id="model-provider"
+              name="modelProvider"
+              class="form-control"
+            >
+              <option value="gemini">
+                Gemini 1.5 Pro (Native Audio + Translation)
+              </option>
+              <option value="openai" disabled>
+                OpenAI GPT-4o (Coming Soon)
+              </option>
+            </select>
+          </div>
+
+          <div class="grid-2col">
+            <div class="file-drop-container">
+              <div id="drop-zone-audio" class="drop-zone">
+                <div class="drop-icon">🎧</div>
+                <p class="drop-text">
+                  Drag & drop your <strong>Audio File</strong> here<br /><span
+                    >(MP3, WAV, M4A, etc.)</span
+                  >
+                </p>
+                <input
+                  type="file"
+                  id="audio-input"
+                  name="audioFile"
+                  accept="audio/*"
+                  required
+                />
+                <div id="audio-filename" class="file-name-display"></div>
+              </div>
+            </div>
+
+            <div class="file-drop-container">
+              <div id="drop-zone-transcript" class="drop-zone">
+                <div class="drop-icon">📄</div>
+                <p class="drop-text">
+                  Drag & drop your
+                  <strong>Transcript File</strong> here<br /><span
+                    >(.txt or .json deepgram generated transcript)</span
+                  >
+                </p>
+                <input
+                  type="file"
+                  id="transcript-input"
+                  name="transcriptFile"
+                  accept=".txt,.json,application/json,text/plain"
+                  required
+                />
+                <div id="transcript-filename" class="file-name-display"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="action-bar">
+            <button type="submit" id="submit-btn" class="btn-primary">
+              <span class="btn-text">Generate Accuracy Report</span>
+              <div class="btn-glow"></div>
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- Loading section -->
+      <section id="loading-section" class="glass-card hidden">
+        <div class="loader-container">
+          <div class="circular-loader">
+            <div class="loader-ring"></div>
+            <div class="loader-ring"></div>
+            <div class="loader-core">AI</div>
+          </div>
+          <h3 id="loading-title">Analyzing Speech & Transcript...</h3>
+          <p id="loading-subtitle">
+            This may take a moment. The engine is acting as a judge evaluating
+            context, assumptions, and accuracy.
+          </p>
+          <div class="progress-bar-container">
+            <div class="progress-bar-fill"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Results section -->
+      <section id="results-section" class="hidden">
+        <div class="results-header">
+          <h2>Evaluation Results</h2>
+          <button id="reset-btn" class="btn-secondary">New Evaluation</button>
+        </div>
+
+        <div class="results-grid">
+          <!-- Score Card -->
+          <div id="score-card" class="glass-card result-item score-item">
+            <h3>Final Score</h3>
+            <div class="score-circle">
+              <svg viewBox="0 0 36 36" class="circular-chart" id="score-chart">
+                <path
+                  class="circle-bg"
+                  d="M18 2.0845
+                                a 15.9155 15.9155 0 0 1 0 31.831
+                                a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+                <path
+                  class="circle-stroke"
+                  id="score-stroke"
+                  stroke-dasharray="0, 100"
+                  d="M18 2.0845
+                                a 15.9155 15.9155 0 0 1 0 31.831
+                                a 15.9155 15.9155 0 0 1 0 -31.831"
+                />
+              </svg>
+              <div class="score-value" id="final-score">0</div>
+            </div>
+          </div>
+
+          <!-- Risk Rate Card -->
+          <div id="risk-card" class="glass-card result-item risk-item">
+            <h3>Context Risk Rate</h3>
+            <div id="risk-badge" class="risk-badge" data-risk="low">Low</div>
+            <p class="risk-desc">
+              Severity of misinterpretations based on missed context.
+            </p>
+          </div>
+
+          <!-- Analysis Overview -->
+          <div id="analysis-card" class="glass-card result-item analysis-item">
+            <h3>Detailed Analysis</h3>
+            <p id="detailed-analysis-text">Loading analysis...</p>
+          </div>
+
+          <!-- Errors and Info Cards -->
+          <div class="glass-card result-item list-item col-span-2">
+            <h3>Missed Information</h3>
+            <ul id="missed-info-list" class="styled-list"></ul>
+          </div>
+
+          <div class="glass-card result-item list-item col-span-2">
+            <h3>Incorrect Information</h3>
+            <ul id="incorrect-info-list" class="styled-list"></ul>
+          </div>
+
+          <div class="glass-card result-item list-item col-span-2">
+            <h3>Punctuation & Grammar</h3>
+            <ul id="grammar-error-list" class="styled-list"></ul>
+          </div>
+
+          <div class="glass-card result-item list-item col-span-2">
+            <h3>Assumptions Made</h3>
+            <ul id="assumptions-list" class="styled-list"></ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- Error section -->
+      <section id="error-section" class="glass-card hidden error-card">
+        <h3>An error occurred</h3>
+        <p id="error-message"></p>
+        <button id="error-reset-btn" class="btn-secondary">Try Again</button>
+      </section>
+    </main>
+    <script src="/static/script.js"></script>
+  </body>
+</html>
