@@ -23,7 +23,10 @@
     </div>
 
     <header id="main-header">
-      <div class="container">
+      <div class="container" style="position: relative;">
+        <button id="theme-toggle" class="btn-theme-toggle" aria-label="Toggle Theme">
+            <span class="theme-icon">🔆</span>
+        </button>
         <h1 id="app-title">Eval<span>AI</span></h1>
         <p id="app-subtitle">Intelligent ASR Accuracy Evaluator</p>
       </div>
@@ -124,7 +127,31 @@
       <section id="results-section" class="hidden">
         <div class="results-header">
           <h2>Evaluation Results</h2>
-          <button id="reset-btn" class="btn-secondary">New Evaluation</button>
+          <div style="display: flex; gap: 1rem;">
+             <button id="download-pdf-btn" class="btn-secondary" style="border-color: var(--accent-primary); color: var(--accent-primary);">Download PDF Report</button>
+             <button id="reset-btn" class="btn-secondary">New Evaluation</button>
+          </div>
+        </div>
+
+        <!-- Audio Player & Translater Tool -->
+        <div id="audio-tools-card" class="glass-card result-item analysis-item" style="margin-bottom: 2rem;">
+            <h3>Audio Controls & Snippet Translation</h3>
+            <div class="audio-controls-container">
+                <audio id="main-audio-player" controls style="width: 100%; border-radius: 50px; outline: none; margin-bottom: 1.5rem;"></audio>
+                
+                <div class="snippet-translator-tool" style="background: rgba(0,0,0,0.2); padding: 1.5rem; border-radius: 16px; border: 1px dashed var(--border-glass);">
+                    <h4 style="margin-bottom: 0.8rem; color: #fff;">Translate an Audio Snippet</h4>
+                    <div style="display: flex; gap: 1rem; align-items: center; flex-wrap: wrap;">
+                        <input type="text" id="snip-start" class="form-control" placeholder="Start (e.g., 00:00:10)" style="max-width: 150px;">
+                        <input type="text" id="snip-end" class="form-control" placeholder="End (e.g., 00:00:25)" style="max-width: 150px;">
+                        <button id="snip-translate-btn" class="btn-primary" style="padding: 0.6rem 1.5rem; font-size: 0.9rem;">
+                            Translate Segment
+                        </button>
+                    </div>
+                    <div id="snip-output" class="hidden" style="margin-top: 1rem; padding: 1rem; background: rgba(124, 58, 237, 0.1); border-left: 4px solid var(--accent-primary); border-radius: 0 8px 8px 0; font-family: var(--font-mono); color: #fff;">
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="results-grid">
@@ -153,11 +180,20 @@
           </div>
 
           <!-- Risk Rate Card -->
-          <div id="risk-card" class="glass-card result-item risk-item">
+          <div id="risk-card" class="glass-card result-item score-item">
             <h3>Context Risk Rate</h3>
             <div id="risk-badge" class="risk-badge" data-risk="low">Low</div>
             <p class="risk-desc">
-              Severity of misinterpretations based on missed context.
+              Severity of misinterpretations.
+            </p>
+          </div>
+
+          <!-- Diarization Insights -->
+          <div id="diarization-card" class="glass-card result-item score-item">
+            <h3>Diarization Quality</h3>
+            <div id="diarize-badge" class="risk-badge" data-risk="medium" style="background: rgba(14, 165, 233, 0.15); color: var(--accent-secondary); border-color: var(--accent-secondary);">Medium</div>
+            <p id="diarize-insight" class="risk-desc">
+              Analyzing speaker separability...
             </p>
           </div>
 
@@ -165,6 +201,116 @@
           <div id="analysis-card" class="glass-card result-item analysis-item">
             <h3>Detailed Analysis</h3>
             <p id="detailed-analysis-text">Loading analysis...</p>
+          </div>
+
+          <!-- Deep Semantic Breakdown Card -->
+          <div id="metrics-card" class="glass-card result-item analysis-item">
+              <h3>Semantic & Entity Preservation Profile</h3>
+              <div class="meta-grid">
+                  <div class="meta-item">
+                      <span class="meta-label">Semantic Match Accuracy</span>
+                      <strong id="metric-semantic" class="meta-val" style="color: var(--accent-tertiary);">0%</strong>
+                  </div>
+                  <div class="meta-item">
+                      <span class="meta-label">Entity Preservation</span>
+                      <strong id="metric-entity" class="meta-val" style="color: var(--accent-secondary);">0%</strong>
+                  </div>
+                  <div class="meta-item">
+                      <span class="meta-label">Hallucination Immunity</span>
+                      <strong id="metric-hallucination" class="meta-val" style="color: var(--warning);">0%</strong>
+                  </div>
+                  <div class="meta-item">
+                      <span class="meta-label">English Fluency</span>
+                      <strong id="metric-fluency" class="meta-val" style="color: var(--accent-primary);">0%</strong>
+                  </div>
+              </div>
+          </div>
+
+          <!-- Audio Metadata Card -->
+          <div id="metadata-card" class="glass-card result-item analysis-item">
+              <h3>Audio Insights & Metadata</h3>
+              <div class="meta-grid">
+                  <div class="meta-item">
+                      <span class="meta-label">Primary Language</span>
+                      <strong id="meta-lang" class="meta-val">-</strong>
+                  </div>
+                  <div class="meta-item">
+                      <span class="meta-label">No. of Speakers</span>
+                      <strong id="meta-speakers" class="meta-val">-</strong>
+                  </div>
+                  <div class="meta-item">
+                      <span class="meta-label">Speaker Voices</span>
+                      <strong id="meta-genders" class="meta-val">-</strong>
+                  </div>
+                  <div class="meta-item">
+                      <span class="meta-label">Audio Quality</span>
+                      <strong id="meta-quality" class="meta-val">-</strong>
+                  </div>
+                  <div class="meta-item">
+                      <span class="meta-label tooltip-anchor" data-tooltip="The length of the processed audio file.">Duration <span class="info-icon">ⓘ</span></span>
+                      <strong id="meta-duration" class="meta-val">-</strong>
+                  </div>
+                  <div class="meta-item">
+                      <span class="meta-label tooltip-anchor" data-tooltip="The raw acoustic confidence score emitted by the backend pipeline. Does NOT mean the transcript implies the correct meaning.">ASR Confidence <span class="info-icon">ⓘ</span></span>
+                      <strong id="meta-confidence" class="meta-val">-</strong>
+                  </div>
+              </div>
+              <button id="nlp-insights-btn" class="btn-secondary" style="margin-top: 1.5rem; width: 100%;">View Language & NLP Insights</button>
+              <div id="nlp-insights-box" class="hidden" style="margin-top: 1rem; padding: 1.5rem; background: rgba(0,0,0,0.3); border-radius: 12px; border-left: 4px solid var(--accent-tertiary);">
+                  <h4 style="color: var(--accent-tertiary); margin-bottom: 0.5rem;">For Non-Technical Reviewers:</h4>
+                  <p id="nlp-insights-text" style="color: #cbd5e1; line-height: 1.6;">Loading language insights...</p>
+              </div>
+          </div>
+
+          <!-- Medical Errors Specifics -->
+          <div class="glass-card result-item list-item col-span-2">
+            <h3>Critical Medical Errors</h3>
+            <ul id="medical-errors-list" class="styled-list medical-alert-list"></ul>
+          </div>
+
+          <!-- Named Entity Recognition (NER) Block -->
+          <div class="glass-card result-item analysis-item" id="ner-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                  <h3>Named Entity Recognition (NER) Findings</h3>
+                  <span id="ner-count" style="background: var(--accent-primary); padding: 0.2rem 0.8rem; border-radius: 99px; font-weight: bold; font-size: 0.9rem;">0 Entities</span>
+              </div>
+              <p style="color: var(--text-secondary); margin-bottom: 1rem;">Identified medication, symptoms, diagnoses and exact usages detected.</p>
+              
+              <div id="ner-bubble-container" style="display: flex; flex-wrap: wrap; gap: 0.8rem; margin-bottom: 1.5rem;">
+                  <!-- Bubbles injected here -->
+              </div>
+              
+              <button id="expand-ner-btn" class="btn-secondary" style="width: 100%;">Expand Detailed NER Analysis</button>
+              
+              <div id="ner-detailed-view" class="hidden" style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1rem;">
+                  <!-- Detailed NER rows injected here -->
+              </div>
+          </div>
+
+          <!-- Dual Transcript Viewer -->
+          <div class="glass-card result-item analysis-item" id="transcript-viewer-card">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                  <h3>Transcript Viewer</h3>
+                  <div style="display: flex; gap: 0.5rem; background: rgba(0,0,0,0.3); padding: 0.4rem; border-radius: 12px; border: 1px solid var(--border-glass);">
+                      <button id="view-timeline-btn" class="tab-btn active">Timeline View</button>
+                      <button id="view-paragraph-btn" class="tab-btn">Paragraph Summary</button>
+                  </div>
+              </div>
+              
+              <div style="margin-bottom: 1.5rem;">
+                  <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                      <input type="checkbox" id="show-corrected-toggle" style="width: 18px; height: 18px; accent-color: var(--accent-tertiary);">
+                      <span style="font-weight: 500; color: #fff;">Show Highlighted Correction Overlay</span>
+                  </label>
+              </div>
+
+              <div id="transcript-content-container" style="background: rgba(0,0,0,0.2); border-radius: 12px; padding: 1.5rem; max-height: 400px; overflow-y: auto; border: 1px solid var(--border-glass); line-height: 1.8;">
+                  <!-- Transcript injected here -->
+              </div>
+              
+              <div style="margin-top: 1.5rem; text-align: right;">
+                  <button id="download-transcript-btn" class="btn-primary" style="padding: 0.6rem 1.5rem; font-size: 0.9rem;">⬇️ Download Corrected Transcript</button>
+              </div>
           </div>
 
           <!-- Errors and Info Cards -->
@@ -179,13 +325,29 @@
           </div>
 
           <div class="glass-card result-item list-item col-span-2">
-            <h3>Punctuation & Grammar</h3>
-            <ul id="grammar-error-list" class="styled-list"></ul>
+            <h3>Assumptions Made</h3>
+            <ul id="assumptions-list" class="styled-list"></ul>
           </div>
 
           <div class="glass-card result-item list-item col-span-2">
-            <h3>Assumptions Made</h3>
-            <ul id="assumptions-list" class="styled-list"></ul>
+            <h3>Punctuation & Grammar</h3>
+            <ul id="grammar-error-list" class="styled-list"></ul>
+          </div>
+          
+          <!-- Chat Ask Box -->
+          <div class="glass-card result-item analysis-item" id="chat-card">
+              <h3>Ask Question About Audio</h3>
+              <p style="color: var(--text-secondary); margin-bottom: 1rem; font-size: 0.9rem;">Chat strictly within the context of the analyzed audio and transcript.</p>
+              
+              <div id="chat-log" style="background: rgba(0,0,0,0.2); border-radius: 12px; padding: 1rem; min-height: 150px; max-height: 300px; overflow-y: auto; border: 1px solid var(--border-glass); margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.8rem;">
+                  <!-- Chat messages injected here -->
+                  <div class="chat-msg bot-msg">Hello! I've analyzed your audio. Ask me anything about it.</div>
+              </div>
+              
+              <div style="display: flex; gap: 0.5rem;">
+                  <input type="text" id="chat-input" class="form-control" placeholder="Ask e.g. 'What specific medications did the doctor prescribe?'...">
+                  <button id="chat-send-btn" class="btn-primary" style="padding: 0 1.5rem; border-radius: 12px;">Ask</button>
+              </div>
           </div>
         </div>
       </section>

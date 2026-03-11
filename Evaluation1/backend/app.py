@@ -49,6 +49,10 @@ async def evaluate_transcript(
         raw_transcript_content = (await transcriptFile.read()).decode('utf-8')
         transcript_content = raw_transcript_content
         
+        avg_confidence = "N/A"
+        duration = "N/A"
+        num_speakers = "N/A"
+        
         try:
             transcript_json = json.loads(raw_transcript_content)
             # Handle Deepgram JSON structure
@@ -56,7 +60,22 @@ async def evaluate_transcript(
                 transcript_content = transcript_json["text"]
             elif "results" in transcript_json and "channels" in transcript_json["results"]:
                 transcript_content = transcript_json["results"]["channels"][0]["alternatives"][0]["transcript"]
-        except (json.JSONDecodeError, KeyError, IndexError):
+                
+            # Deepgram advanced metadata
+            if "results" in transcript_json and "audio_segments" in transcript_json["results"]:
+                segments = transcript_json["results"]["audio_segments"]
+                confidences = [seg.get("confidence", 0) for seg in segments]
+                if confidences:
+                    avg_confidence = round((sum(confidences) / len(confidences)) * 100, 2)
+                
+                speakers = set(seg.get("speaker_label") for seg in segments if seg.get("speaker_label"))
+                if speakers:
+                    num_speakers = len(speakers)
+                    
+            if "metadata" in transcript_json and "duration" in transcript_json["metadata"]:
+                duration = round(transcript_json["metadata"]["duration"], 2)
+                
+        except Exception:
             # Fall back to using the raw text content if not parsable
             pass
         
@@ -64,12 +83,63 @@ async def evaluate_transcript(
         evaluator = ASREvaluator(model_provider=modelProvider)
         result = evaluator.evaluate(temp_audio_path, transcript_content)
         
+        # Inject Deepgram parsing findings
+        if isinstance(result, dict) and not "error" in result:
+            result["deepgram_metadata"] = {
+                "avg_confidence": avg_confidence,
+                "duration": duration,
+                "deepgram_speakers": num_speakers
+            }
+        
         # Cleanup audio for next run
         try:
             os.unlink(temp_audio_path)
         except:
             pass
         
+        return result
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.post("/api/translate_snippet")
+async def translate_snippet_route(
+    audioFile: UploadFile = File(...),
+    startTime: str = Form(...),
+    endTime: str = Form(...),
+    modelProvider: str = Form("gemini")
+):
+    try:
+        ext = os.path.splitext(audioFile.filename)[1] or ".wav"
+        temp_audio_path = os.path.join(tmp_dir, f"snippet_eval_{ext}")
+        with open(temp_audio_path, "wb") as f:
+            f.write(await audioFile.read())
+            
+        evaluator = ASREvaluator(model_provider=modelProvider)
+        result = evaluator.translate_snippet(temp_audio_path, startTime, endTime)
+        
+        try: os.unlink(temp_audio_path)
+        except: pass
+        return result
+    except Exception as e:
+        return {"error": str(e)}
+
+@app.post("/api/chat")
+async def chat_with_audio_route(
+    audioFile: UploadFile = File(...),
+    question: str = Form(...),
+    modelProvider: str = Form("gemini")
+):
+    try:
+        ext = os.path.splitext(audioFile.filename)[1] or ".wav"
+        temp_audio_path = os.path.join(tmp_dir, f"chat_eval_{ext}")
+        with open(temp_audio_path, "wb") as f:
+            f.write(await audioFile.read())
+            
+        evaluator = ASREvaluator(model_provider=modelProvider)
+        result = evaluator.chat_with_audio(temp_audio_path, question)
+        
+        try: os.unlink(temp_audio_path)
+        except: pass
         return result
     except Exception as e:
         return {"error": str(e)}
